@@ -1,167 +1,245 @@
 const express = require("express");
 const cors = require("cors");
 const cookieSession = require("cookie-session");
-var path=require('path');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const path = require("path");
+const multer = require("multer");
+
 const app = express();
 
+/* ===================================
+   MULTER
+=================================== */
 
-var corsOptions = {
+const upload = multer({
+  dest: "/tmp"
+});
+
+/* ===================================
+   CORS
+=================================== */
+
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "http://localhost:8100",
+//   "http://localhost:8081",
+//   "https://jyoti-bhagat.vercel.app"
+// ];
+const allowedOrigins = ["*"];
+
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
-  origin: ["http://localhost:3000", "http://localhost:8100"]
-};
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "OPTIONS"
+  ],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept"
+  ]
+}));
 
-app.use(cors(corsOptions));
-/* for Angular Client (withCredentials) */
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: ["http://localhost:8081"],
-//   })
-// );
+app.options("*", cors());
 
+/* ===================================
+   BODY PARSER
+=================================== */
 
-// parse requests of content-type - application/json
 app.use(express.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+  extended: true
+}));
+
+/* ===================================
+   COOKIE SESSION
+=================================== */
 
 app.use(
   cookieSession({
     name: "kit-session",
-    keys: ["COOKIE_SECRET"], // should use as secret environment variable
-    httpOnly: true
+    keys: [
+      process.env.COOKIE_SECRET || "COOKIE_SECRET"
+    ],
+    httpOnly: true,
+    sameSite:
+      process.env.NODE_ENV === "production"
+        ? "none"
+        : "lax",
+    secure:
+      process.env.NODE_ENV === "production"
   })
 );
 
+/* ===================================
+   DATABASE
+=================================== */
+
 const db = require("./app/models");
+
 const Role = db.role;
+
+db.mongoose.set("strictQuery", false);
+
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Connected to the database!");
+
+    console.log("MongoDB Connected");
+
     initial();
+
   })
-  .catch(err => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
+  .catch((err) => {
+
+    console.error("MongoDB Connection Error");
+
+    console.error(err);
+
   });
 
-// simple route
+/* ===================================
+   TEST ROUTE
+=================================== */
+
+app.get("/test", (req, res) => {
+
+  res.status(200).json({
+    success: true,
+    message: "Server working correctly"
+  });
+
+});
+
+/* ===================================
+   ROOT ROUTE
+=================================== */
+
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to backend application." });
-});
-///////////
-// Function to serve all static files
-// inside public directory.
-app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
-//////////////
-app.post('/upload', upload.single('file'), (req, res) => {
-  try {
-    const ename = req.body.ename;
-    const qname = req.body.qname;
-    const file = req.file;
 
-    console.log('Title:', ename);
-    console.log('Title:', qname);
-    console.log('File:', file);
-
-    // Process the file and title here...
-    res.status(200).send('File uploaded successfully');
-  } catch (error) {
-    console.error('Error processing upload:', error);
-    res.status(500).send('Server error');
-  }
-});
-
-app.get('/uploads/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'uploads', filename);
-  res.sendFile(filePath);
-});
-
-app.get('/upload/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'app/uploads', filename);
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error("File send error:", err);
-      res.status(404).send("File not found");
-    }
+  res.json({
+    message: "Backend running"
   });
+
 });
 
-//////////////
+/* ===================================
+   STATIC FILES
+=================================== */
+
+app.use(express.static("public"));
+
+/* ===================================
+   FILE UPLOAD
+=================================== */
+
+app.post(
+  "/upload",
+  upload.single("file"),
+  (req, res) => {
+
+    try {
+
+      const ename = req.body.ename;
+
+      const qname = req.body.qname;
+
+      const file = req.file;
+
+      console.log("ename:", ename);
+
+      console.log("qname:", qname);
+
+      console.log("file:", file);
+
+      res.status(200).json({
+        success: true,
+        message: "File uploaded",
+        file
+      });
+
+    } catch (error) {
+
+      console.error("Upload Error");
+
+      console.error(error);
+
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+
+    }
+
+  }
+);
+
+/* ===================================
+   ROUTES
+=================================== */
+
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
-require("./app/routes/student.routes")(app);
-require("./app/routes/qpaper.routes")(app);
-require("./app/routes/publisher.routes")(app);
-require("./app/routes/cat.routes")(app);
-require("./app/routes/customer.routes")(app);
-require("./app/routes/book.routes")(app);
-require("./app/routes/course.routes")(app);
-require("./app/routes/branch.routes")(app);
-require("./app/routes/bissue.routes")(app);
-require("./app/routes/product.routes")(app);
-require("./app/routes/ssproduct.routes")(app);
-require("./app/routes/profile.routes")(app);
-require("./app/routes/question.routes")(app);
-require("./app/routes/answer.routes")(app);
-require("./app/routes/comment.routes")(app);
-require("./app/routes/cart.routes")(app);
-require("./app/routes/order.routes")(app);
 require("./app/routes/payment.routes")(app);
-require("./app/routes/ssorder.routes")(app);
-require("./app/routes/follow.routes")(app);
 require("./app/routes/address.routes")(app);
-require("./app/routes/wishlist.routes")(app);
 
-// set port, listen for requests
-const PORT = process.env.PORT || 8090;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+/* ===================================
+   GLOBAL ERROR HANDLER
+=================================== */
+
+app.use((err, req, res, next) => {
+
+  console.error("GLOBAL ERROR");
+
+  console.error(err);
+
+  res.status(500).json({
+    success: false,
+    error: err.message
+  });
+
 });
 
+/* ===================================
+   EXPORT FOR VERCEL
+=================================== */
+
+module.exports = app;
+
+/* ===================================
+   INITIAL ROLES
+=================================== */
+
 function initial() {
+
   Role.estimatedDocumentCount((err, count) => {
+
     if (!err && count === 0) {
+
       new Role({
         name: "user"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
-
-        console.log("added 'user' to roles collection");
-      });
+      }).save();
 
       new Role({
         name: "moderator"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
-
-        console.log("added 'moderator' to roles collection");
-      });
+      }).save();
 
       new Role({
         name: "admin"
-      }).save(err => {
-        if (err) {
-          console.log("error", err);
-        }
+      }).save();
 
-        console.log("added 'admin' to roles collection");
-      });
+      console.log("Default roles added");
+
     }
-  });
-}
 
+  });
+
+}
