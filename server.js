@@ -205,7 +205,7 @@ require("./app/routes/answer.routes")(app);
 require("./app/routes/comment.routes")(app);
 require("./app/routes/cart.routes")(app);
 require("./app/routes/order.routes")(app);
-// require("./app/routes/payment.routes")(app);
+require("./app/routes/payment.routes")(app);
 require("./app/routes/ssorder.routes")(app);
 require("./app/routes/follow.routes")(app);
 require("./app/routes/address.routes")(app);
