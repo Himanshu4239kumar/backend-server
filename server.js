@@ -18,12 +18,6 @@ const upload = multer({
    CORS
 =================================== */
 
-// const allowedOrigins = [
-//   "http://localhost:3000",
-//   "http://localhost:8100",
-//   "http://localhost:8081",
-//   "https://jyoti-bhagat.vercel.app"
-// ];
 const allowedOrigins = ["*"];
 
 app.use(cors({
@@ -185,7 +179,6 @@ app.post(
 /* ===================================
    ROUTES
 =================================== */
-
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/student.routes")(app);
@@ -210,7 +203,6 @@ require("./app/routes/ssorder.routes")(app);
 require("./app/routes/follow.routes")(app);
 require("./app/routes/address.routes")(app);
 require("./app/routes/wishlist.routes")(app);
-
 
 /* ===================================
    GLOBAL ERROR HANDLER
