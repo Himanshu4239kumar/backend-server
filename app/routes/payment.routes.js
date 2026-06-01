@@ -4,10 +4,10 @@ module.exports = app => {
   const fs = require("fs");
   const multer = require("multer");
   const path = require("path");
-  const { v4: uuidv4 } = require("uuid"); 
+  // FIX: Use Node's built-in crypto module instead of the external uuid package
+  const { randomUUID } = require("crypto"); 
   
   global.__basedir = __dirname;
-  
   
   const imageFilter = (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
@@ -22,8 +22,8 @@ module.exports = app => {
       cb(null, __basedir + "../../../uploads/");
     },
     filename: (req, file, cb) => {
-      cb(null, uuidv4() +
-      path.extname(file.originalname));
+      // FIX: Call the native randomUUID() function here
+      cb(null, randomUUID() + path.extname(file.originalname));
     },
   });
   
@@ -33,7 +33,6 @@ module.exports = app => {
   
   // Create a new Payment
   router.post("/", uploadFile.single("file"), payments.create);
-  
 
   // Retrieve all payments
   router.get("/", payments.findAll);
@@ -57,4 +56,3 @@ module.exports = app => {
 
   app.use("/api/payments", router);
 };
-//
