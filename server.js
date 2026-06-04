@@ -136,23 +136,33 @@ app.post(
     }
   }
 );
-
 /* ===================================
-   🚨 LIVE PRICE FEED API (NAYA ADD KIYA HAI) 🚨
+   🚨 LIVE PRICE FEED API (MINUTE-BY-MINUTE DYNAMIC) 🚨
 =================================== */
 app.get("/api/price/live", (req, res) => {
-  // Current time ko seconds mein convert karke 1 second ke chunks banaye
-  const timeSeed = Math.floor(Date.now() / 1000);
+  const timeSeed = Math.floor(Date.now() / 1000); // Seconds mein time
 
-  // Math.sin aur Math.cos ka use karke ek smooth, wave jaisi movement banayi hai
-  const wave1 = Math.sin(timeSeed * 0.5) * 3;     // Bada trend (Up/Down)
-  const wave2 = Math.cos(timeSeed * 0.2) * 1.5;   // Chota trend
-  const noise = Math.sin(timeSeed * 10) * 0.5;    // Choti fast volatility (Jhatke)
+  // 1. Time ko Minutes aur Hours mein tod liya
+  const minutesPassed = timeSeed / 60;   
+  const hoursPassed = timeSeed / 3600;
 
-  const basePrice = 4533.00; // XAUUSD ka base price
+  // 2. 🚨 MINUTE TREND (Sabse zaroori) 🚨
+  // Ab har 1-2 minute mein price 50 points tak upar ya neeche ja sakta hai
+  const minuteTrend = Math.sin(minutesPassed * 0.8) * 50; 
   
-  // Teeno waves ko mila kar final price banaya
-  const currentPrice = (basePrice + wave1 + wave2 + noise).toFixed(2);
+  // Har ghante ka bada swing (100 points)
+  const hourlyTrend = Math.cos(hoursPassed * 0.5) * 100; 
+
+  // Asli base price ab har minute tezi se badlega
+  const dynamicBasePrice = 4500.00 + hourlyTrend + minuteTrend;
+
+  // 3. SECONDS TREND (Live screen par jo fast flickering hoti hai)
+  const wave1 = Math.sin(timeSeed * 0.5) * 3;     
+  const wave2 = Math.cos(timeSeed * 0.2) * 1.5;   
+  const noise = Math.sin(timeSeed * 10) * 0.5;    
+
+  // 4. FINAL PRICE
+  const currentPrice = (dynamicBasePrice + wave1 + wave2 + noise).toFixed(2);
 
   res.json({
     success: true,
