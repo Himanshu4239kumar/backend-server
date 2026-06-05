@@ -68,16 +68,16 @@ exports.findOne = (req, res) => {
 // Find a single Order by userID
 exports.findUserPayment = async (req, res) => {
   try {
+    // 💡 FIX: Removed .populate("userId") jo server crash kar raha tha
     const data = await Payment.find({
       userId: req.params.userId
-    }).populate("userId");
+    });
 
     res.send(data);
   } catch (err) {
+    console.error("Payment Fetch Error:", err); // Asli error console mein dikhega
     res.status(500).send({
-      message:
-        err.message ||
-        "Some error occurred while retrieving payments."
+      message: err.message || "Some error occurred while retrieving payments."
     });
   }
 };
