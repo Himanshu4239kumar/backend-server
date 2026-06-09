@@ -73,19 +73,47 @@ const Role = db.role;
 
 db.mongoose.set("strictQuery", false);
 
-db.mongoose
-  .connect(db.url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log("MongoDB Connected");
+// Global variable mein connection save kar rahe hain taaki Vercel timeout na ho
+let cachedDb = null;
+
+async function connectDB() {
+  // Agar connection pehle se hai, toh wahi use karo
+  if (cachedDb) {
+    console.log("Using cached MongoDB connection");
+    return cachedDb;
+  }
+
+  // Naya connection banao (saath mein timeout limits badha rahe hain)
+  try {
+    const mongooseClient = await db.mongoose.connect(db.url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // MongoDB connection dhoondhne ka max time
+      socketTimeoutMS: 45000,          // Query execute karne ka max time
+    });
+    
+    console.log("New MongoDB Connected");
+    cachedDb = mongooseClient;
+    
+    // Sirf pehli baar role check karo
     initial();
-  })
-  .catch((err) => {
-    console.error("MongoDB Connection Error");
-    console.error(err);
-  });
+    
+    return mongooseClient;
+  } catch (err) {
+    console.error("MongoDB Connection Error", err);
+    throw err;
+  }
+}
+
+// Har API request aane par pehle connection check karo
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Database connection failed" });
+  }
+});
 
 /* ===================================
    TEST ROUTE
