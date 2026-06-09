@@ -222,6 +222,15 @@ app.use((err, req, res, next) => {
     error: err.message
   });
 });
+/* ===================================
+   START SERVER (LOCAL PC KE LIYE)
+=================================== */
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+  // Local PC par start hote hi turant connect karne ke liye:
+  connectDB().catch(console.error); 
+});
 
 /* ===================================
    EXPORT FOR VERCEL
