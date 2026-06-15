@@ -210,6 +210,7 @@ require("./app/routes/order.routes")(app);
 require("./app/routes/payment.routes")(app);
 require("./app/routes/address.routes")(app);
 require("./app/routes/trade.routes")(app);
+require("./app/routes/payoutrequest.routes")(app);
 
 /* ===================================
    GLOBAL ERROR HANDLER
