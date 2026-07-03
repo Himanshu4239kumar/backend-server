@@ -1,4 +1,6 @@
-const TradeHistory = require("../models/store.model");
+
+const db = require("../models")
+const TradeHistory = db.stores;
 
 // Create Trade
 exports.createTrade = async (req, res) => {
