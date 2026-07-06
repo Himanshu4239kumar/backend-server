@@ -16,24 +16,13 @@ const upload = multer({
 /* ===================================
    CORS (Fixed for Universal Access with Credentials)
 =================================== */
+/* ===================================
+   CORS (Fixed for Vercel & Ionic)
+=================================== */
 app.use(cors({
-  origin: function (origin, callback) {
-    callback(null, true);
-  },
+  origin: true, // Yeh kisi bhi frontend origin (jaise localhost:8100) ko automatic allow kar dega
   credentials: true,
-  methods: [
-    "GET",
-    "POST",
-    "PUT",
-    "DELETE",
-    "OPTIONS"
-  ],
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "X-Requested-With",
-    "Accept"
-  ]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
 }));
 
 app.options("*", cors());
@@ -211,7 +200,7 @@ require("./app/routes/payment.routes")(app);
 require("./app/routes/address.routes")(app);
 require("./app/routes/trade.routes")(app);
 require("./app/routes/payoutrequest.routes")(app);
-require("./app/routes/store.routes")(app);
+// require("./app/routes/store.routes")(app);
 
 /* ===================================
    GLOBAL ERROR HANDLER
