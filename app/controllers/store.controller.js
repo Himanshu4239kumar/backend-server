@@ -1,11 +1,10 @@
 
-const db = require("../models")
-const TradeHistory = db.stores;
-
+const db = require("../models");
+const Store = db.stores;
 // Create Trade
-exports.createTrade = async (req, res) => {
+exports.create= async (req, res) => {
   try {
-    const trade = await TradeHistory.create(req.body);
+    const trade = await Store.create(req.body);
 
     res.status(201).json({
       success: true,
@@ -19,10 +18,10 @@ exports.createTrade = async (req, res) => {
   }
 };
 
-// Get All Trades
-exports.getAllTrades = async (req, res) => {
+// Get All Stores
+exports.findAll = async (req, res) => {
   try {
-    const trades = await TradeHistory.find().sort({ openTime: -1 });
+    const trades = await Store.find().sort({ openTime: -1 });
 
     res.status(200).json({
       success: true,
@@ -37,15 +36,15 @@ exports.getAllTrades = async (req, res) => {
   }
 };
 
-// Get Trade by ID
-exports.getTradeById = async (req, res) => {
+// Get Store by ID
+exports.findOne = async (req, res) => {
   try {
-    const trade = await TradeHistory.findById(req.params.id);
+    const trade = await Store.findById(req.params.id);
 
     if (!trade) {
       return res.status(404).json({
         success: false,
-        message: "Trade not found",
+        message: "Store not found",
       });
     }
 
@@ -61,17 +60,17 @@ exports.getTradeById = async (req, res) => {
   }
 };
 
-// Get Trades by User
-exports.getTradesByUser = async (req, res) => {
+// Get Stores by User
+exports.findByUser = async (req, res) => {
   try {
-    const trades = await TradeHistory.find({
+    const stores = await Store.find({
       userId: req.params.userId,
     }).sort({ openTime: -1 });
 
     res.status(200).json({
       success: true,
-      count: trades.length,
-      data: trades,
+      count: stores.length,
+      data: stores,
     });
   } catch (error) {
     res.status(500).json({
@@ -81,10 +80,10 @@ exports.getTradesByUser = async (req, res) => {
   }
 };
 
-// Update Trade
-exports.updateTrade = async (req, res) => {
+// Update Store 
+exports.update = async (req, res) => {
   try {
-    const trade = await TradeHistory.findByIdAndUpdate(
+    const trade = await Store.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -112,10 +111,10 @@ exports.updateTrade = async (req, res) => {
   }
 };
 
-// Delete Trade
-exports.deleteTrade = async (req, res) => {
+// Delete Store
+exports.delete = async (req, res) => {
   try {
-    const trade = await TradeHistory.findByIdAndDelete(req.params.id);
+    const trade = await Store.findByIdAndDelete(req.params.id);
 
     if (!trade) {
       return res.status(404).json({

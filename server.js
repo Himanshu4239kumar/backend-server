@@ -194,12 +194,28 @@ app.get("/api/price/live", (req, res) => {
 =================================== */
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
+require("./app/routes/publisher.routes")(app);
+require("./app/routes/cat.routes")(app);
+require("./app/routes/customer.routes")(app);
+require("./app/routes/book.routes")(app);
+require("./app/routes/course.routes")(app);
+require("./app/routes/branch.routes")(app);
+require("./app/routes/bissue.routes")(app);
+require("./app/routes/product.routes")(app);
+require("./app/routes/ssproduct.routes")(app);
 require("./app/routes/profile.routes")(app);
+require("./app/routes/question.routes")(app);
+require("./app/routes/answer.routes")(app);
+require("./app/routes/comment.routes")(app);
+require("./app/routes/cart.routes")(app);
 require("./app/routes/order.routes")(app);
 require("./app/routes/payment.routes")(app);
+require("./app/routes/ssorder.routes")(app);
+require("./app/routes/follow.routes")(app);
 require("./app/routes/address.routes")(app);
-require("./app/routes/trade.routes")(app);
+require("./app/routes/wishlist.routes")(app);
 require("./app/routes/payoutrequest.routes")(app);
+require("./app/routes/store.routes")(app);
 // require("./app/routes/store.routes")(app);
 
 /* ===================================
