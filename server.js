@@ -216,7 +216,7 @@ require("./app/routes/address.routes")(app);
 require("./app/routes/wishlist.routes")(app);
 require("./app/routes/payoutrequest.routes")(app);
 require("./app/routes/store.routes")(app);
-// require("./app/routes/store.routes")(app);
+
 
 /* ===================================
    GLOBAL ERROR HANDLER
