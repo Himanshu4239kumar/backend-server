@@ -5,12 +5,13 @@ module.exports = app => {
   // 🟢 1. Trade Open karne ki API
   app.post("/api/trades/open", async (req, res) => {
     try {
-      // 🚨 mt5Id ko req.body se receive kar rahe hain
-      const { userId, mt5Id, symbol, tradeType, lotSize, openPrice } = req.body;
+      // 🚨 FIX: userName ko bhi req.body se receive kar rahe hain
+      const { userId, userName, mt5Id, symbol, tradeType, lotSize, openPrice } = req.body;
       
       const newTrade = new Trade({
         userId: userId,
-        mt5Id: mt5Id, // 🚨 Database me save kar diya
+        userName: userName || "Trader", // 🚨 NAYA: Database me userName save kar diya
+        mt5Id: mt5Id, 
         symbol: symbol,
         tradeType: tradeType,
         lotSize: lotSize,
@@ -28,7 +29,6 @@ module.exports = app => {
   // 🔵 2. Open Trades fetch karne ki API (User aur MT5 ID ke hisaab se)
   app.get("/api/trades/open/:userId/:mt5Id", async (req, res) => {
     try {
-      // 🚨 Sirf usi user aur usi MT5 ID ki open trades bhejo
       const openTrades = await Trade.find({ 
         userId: req.params.userId,
         mt5Id: req.params.mt5Id,
@@ -60,7 +60,6 @@ module.exports = app => {
   // 🟡 4. Closed Trades (History) fetch karne ki API (User aur MT5 ID ke hisaab se)
   app.get("/api/trades/closed/:userId/:mt5Id", async (req, res) => {
     try {
-      // 🚨 Sirf usi user aur usi MT5 ID ki history bhejo
       const closedTrades = await Trade.find({ 
         userId: req.params.userId,
         mt5Id: req.params.mt5Id,
@@ -69,6 +68,20 @@ module.exports = app => {
       
       res.status(200).json({ success: true, trades: closedTrades });
     } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  // 🟣 5. 🚨 NAYA ROUTE ADMIN KE LIYE: Saari trades (kisi bhi user ki) fetch karna
+  app.get("/api/trades/all", async (req, res) => {
+    try {
+      // Database se saari trades utha lo aur naye se purane ke hisaab se sort karo
+      const allTrades = await Trade.find({}).sort({ openTime: -1 });
+      
+      // Admin Panel data ko "data" key ke andar dhoondhta hai, isliye aise bheja
+      res.status(200).json({ success: true, data: allTrades }); 
+    } catch (err) {
+      console.error("Fetch All Trades Error:", err);
       res.status(500).json({ success: false, message: err.message });
     }
   });
