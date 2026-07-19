@@ -59,10 +59,15 @@ exports.verifyCoupon = async (req, res) => {
     if (!coupon) return res.status(404).json({ success: false, message: "Invalid Coupon Code" });
     if (new Date(coupon.expiryDate) < currentDate) return res.status(400).json({ success: false, message: "Coupon has expired" });
     
-    // Check if applicable for this size (0 means all accounts)
-    let cSize = coupon.applicableForSize || coupon.applicableforSize;
-    if (cSize !== 0 && cSize !== challengeSize) {
-      return res.status(400).json({ success: false, message: `Only valid for ${cSize/1000}K Challenge` });
+    // 🚨 YAHAN FIX KIYA HAI: Zero (0) ko properly handle karne ke liye
+    let cSize = coupon.applicableForSize;
+    if (cSize === undefined || cSize === null) {
+      cSize = coupon.applicableforSize; // Purane spelling wale coupons ke liye backup
+    }
+
+    // Ab agar cSize 0 (All Accounts) hai, toh yeh if block skip ho jayega aur coupon lag jayega
+    if (cSize !== 0 && cSize !== Number(challengeSize)) {
+      return res.status(400).json({ success: false, message: `Only valid for ${cSize / 1000}K Challenge` });
     }
 
     res.status(200).json({ success: true, message: "Coupon applied!", discountPercentage: coupon.discountPercentage });
