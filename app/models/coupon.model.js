@@ -4,7 +4,8 @@ module.exports = mongoose => {
       code: String,
       discountPercentage: Number,
       expiryDate: Date,
-      applicableforSize:Number,
+      applicableForSize: Number, // 🚨 FIX 1: 'F' ko capital kar diya taaki frontend se match ho
+      isActive: { type: Boolean, default: true } // 🚨 FIX 2: Yeh field zaroori thi active coupons filter karne ke liye
     },
     { timestamps: true }
   );
