@@ -34,6 +34,7 @@ db.follows = require("./follow.model.js")(mongoose);
 db.addresses = require("./address.model.js")(mongoose);
 db.wishlists = require("./wishlist.model.js")(mongoose);
 db.payoutrequests = require("./payoutrequest.model.js")(mongoose);
-db.stores = require("./store.model.js");
+db.stores = require("./store.model.js")(mongoose);
+db.coupons = require("./coupon.model.js")(mongoose);
 
 module.exports = db;
