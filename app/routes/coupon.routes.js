@@ -1,13 +1,12 @@
 module.exports = app => {
   const coupons = require("../controllers/coupon.controller.js");
-
   var router = require("express").Router();
 
-  // Create a new coupon
-  router.post("/", coupons.create);
+  // 🚨 FIX: "/" ki jagah "/create" kar diya
+  router.post("/create", coupons.create);
 
-  // Retrieve all coupons
-  router.get("/", coupons.findAll);
+  // 🚨 FIX: "/" ki jagah "/all" kar diya
+  router.get("/all", coupons.findAll);
 
   // Retrieve all published coupons 
   router.get("/active", coupons.findAllActive);
@@ -23,7 +22,7 @@ module.exports = app => {
   // Delete a coupon with id
   router.delete("/:id", coupons.delete);
 
-  // Create a new coupon
+  // Delete all coupons
   router.delete("/", coupons.deleteAll);
 
   app.use("/api/coupons", router);
