@@ -1,7 +1,7 @@
 const db = require("../models");
-const Coupon = db.coupons; // Make sure this matches your DB export
+const Coupon = db.coupons; 
 
-// Create and Save a new Coupon 
+// 1. Create and Save a new Coupon 
 exports.create = (req, res) => {
   if (!req.body.code) {
     return res.status(400).send({ message: "Coupon Code can not be empty!" });
@@ -17,7 +17,6 @@ exports.create = (req, res) => {
 
   coupon.save()
     .then(data => {
-      // 🚨 FIX: Added { success: true, data: data }
       res.send({ success: true, data: data, message: "Coupon created successfully" });
     })
     .catch(err => {
@@ -25,11 +24,10 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all coupons (Admin Panel Table ke liye)
+// 2. Retrieve all coupons (Admin Panel Table ke liye)
 exports.findAll = (req, res) => {
   Coupon.find({}).sort({ createdAt: -1 })
     .then(data => {
-      // 🚨 FIX: Wrapped array inside `data` key
       res.send({ success: true, data: data });
     })
     .catch(err => {
@@ -37,11 +35,10 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find all active Coupons (User My Rewards ke liye)
+// 3. Find all active Coupons (User My Rewards ke liye)
 exports.findAllActive = (req, res) => {
   const currentDate = new Date();
   
-  // 🚨 FIX: Sirf wo coupons bhejenge jo abhi expire nahi hue hain
   Coupon.find({ expiryDate: { $gt: currentDate } }).sort({ createdAt: -1 })
     .then(data => {
       res.send({ success: true, data: data });
@@ -51,7 +48,7 @@ exports.findAllActive = (req, res) => {
     });
 };
 
-// 🚨 NEW FIX: Payment Page par Apply dabane ke liye yeh zaroori hai!
+// 4. Verify Coupon (Payment page ke liye)
 exports.verifyCoupon = async (req, res) => {
   try {
     const { code, challengeSize } = req.body;
@@ -74,4 +71,74 @@ exports.verifyCoupon = async (req, res) => {
   }
 };
 
-// ... (Neeche tumhare baaki ke findOne, update, delete wale functions waise hi rehne do) ...
+// 5. Check Duplicate Coupon
+exports.checkDuplicateCoupon = async (req, res) => {
+  try {
+    const code = req.query.code;
+    if (!code) {
+      return res.status(400).json({ error: 'Coupon Code is required' });
+    }
+    const coupon = await Coupon.findOne({ code });
+    return res.json({ exists: !!coupon });
+  } catch (err) {
+    console.error('Error checking Coupon Code:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// 6. Find a single Coupon with an id
+exports.findOne = (req, res) => {
+  const id = req.params.id;
+  Coupon.findById(id)
+    .then(data => {
+      if (!data) res.status(404).send({ message: "Not found Coupon with id " + id });
+      else res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({ message: "Error retrieving Coupon with id=" + id });
+    });
+};
+
+// 7. Update a Coupon by the id
+exports.update = (req, res) => {
+  if (!req.body) {
+    return res.status(400).send({ message: "Data to update can not be empty!" });
+  }
+  const id = req.params.id;
+  Coupon.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    .then(data => {
+      if (!data) {
+        res.status(404).send({ message: `Cannot update Coupon with id=${id}. Maybe Coupon was not found!` });
+      } else res.send({ message: "Coupon was updated successfully." });
+    })
+    .catch(err => {
+      res.status(500).send({ message: "Error updating Coupon with id=" + id });
+    });
+};
+
+// 8. Delete a Coupon
+exports.delete = (req, res) => {
+  const id = req.params.id;
+  Coupon.findByIdAndRemove(id, { useFindAndModify: false })
+    .then(data => {
+      if (!data) {
+        res.status(404).send({ message: `Cannot delete Coupon with id=${id}. Maybe Coupon was not found!` });
+      } else {
+        res.send({ message: "Coupon was deleted successfully!" });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({ message: "Could not delete Coupon with id=" + id });
+    });
+};
+
+// 9. Delete all Coupons
+exports.deleteAll = (req, res) => {
+  Coupon.deleteMany({})
+    .then(data => {
+      res.send({ message: `${data.deletedCount} Coupons were deleted successfully!` });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message || "Some error occurred while removing all Coupons." });
+    });
+};
