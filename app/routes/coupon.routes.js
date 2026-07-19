@@ -7,12 +7,12 @@ module.exports = app => {
 
   // 🚨 FIX: "/" ki jagah "/all" kar diya
   router.get("/all", coupons.findAll);
-  
-  // Payment page verification ke liye
-  router.post("/verify", coupons.verifyCoupon);
 
   // Retrieve all published coupons 
   router.get("/active", coupons.findAllActive);
+
+    // Payment page verification ke liye
+  router.post("/verify", coupons.verifyCoupon);
 
   router.get("/check", coupons.checkDuplicateCoupon);
 
