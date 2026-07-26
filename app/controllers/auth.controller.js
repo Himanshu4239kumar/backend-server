@@ -179,9 +179,17 @@ exports.signout = async (req, res) => {
   }
 };
 //
+// 🚨 UPDATE 1: Duplicates ko yahan filter karenge
 exports.findAll = (req, res) => {
-  User.find().populate("roles")
-    .then(data => res.send(data))
+  // .sort({ createdAt: -1 }) lagaya hai taaki naye users upar aayein
+  User.find().populate("roles").sort({ createdAt: -1 })
+    .then(data => {
+      // MAGIC FIX: Database se aane ke baad same email walo ko hata do
+      const uniqueUsers = Array.from(new Map(data.map(item => [item.email, item])).values());
+      
+      // Frontend ko sirf unique log hi jayenge
+      res.send(uniqueUsers);
+    })
     .catch(err => {
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving DATA."
@@ -189,12 +197,14 @@ exports.findAll = (req, res) => {
     });
 };
 
+// 🚨 UPDATE 2: Count bhi sirf unique logon ka nikalenge, taaki dashboard par number sahi aaye
 exports.getUserCount = async (req, res) => {
   try {
-    const count = await User.countDocuments();
+    // distinct("email") sirf alag-alag emails ko count karega, duplicates ko chhod dega
+    const uniqueEmails = await User.distinct("email");
 
     res.status(200).send({
-      totalUsers: count,
+      totalUsers: uniqueEmails.length,
     });
   } catch (err) {
     res.status(500).send({

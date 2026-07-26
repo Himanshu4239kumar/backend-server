@@ -7,7 +7,6 @@ const User = mongoose.model(
     firstName: String,
     lastName: String,
     email: String,
-    phone: String, // 🚨 ADDED: Admin panel ke mobile column ke liye
     password: String,
     roles: [
       {
@@ -15,8 +14,8 @@ const User = mongoose.model(
         ref: "Role"
       }
     ],
-    active: { type: Boolean, default: true }
-  }, { timestamps: true })
+    active: Boolean
+  })
 );
 
 module.exports = User;
