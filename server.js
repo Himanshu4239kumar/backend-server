@@ -218,6 +218,7 @@ require("./app/routes/store.routes")(app);
 require("./app/routes/trade.routes")(app);
 require("./app/routes/payoutrequest.routes")(app);
 require("./app/routes/coupon.routes")(app);
+app.use('/api/tickets', ticketRoutes);
 
 
 
