@@ -3,6 +3,7 @@ const cors = require("cors");
 const cookieSession = require("cookie-session");
 const path = require("path");
 const multer = require("multer");
+const ticketRoutes = require('./routes/ticket.routes');
 
 const app = express();
 
