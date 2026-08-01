@@ -3,7 +3,6 @@ const cors = require("cors");
 const cookieSession = require("cookie-session");
 const path = require("path");
 const multer = require("multer");
-const ticketRoutes = require('./routes/ticket.routes');
 
 const app = express();
 
@@ -219,7 +218,7 @@ require("./app/routes/store.routes")(app);
 require("./app/routes/trade.routes")(app);
 require("./app/routes/payoutrequest.routes")(app);
 require("./app/routes/coupon.routes")(app);
-app.use('/api/tickets', ticketRoutes);
+require("./app/routes/ticket.routes")(app);
 
 
 

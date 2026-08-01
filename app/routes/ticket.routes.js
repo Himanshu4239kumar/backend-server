@@ -1,11 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const { createTicket, getAllTickets } = require('../controllers/ticket.controller');
+const controller = require("../controllers/ticket.controller");
 
-// URL: POST /api/tickets/create
-router.post('/create', createTicket);
+module.exports = function(app) {
+  app.use(function(req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, Content-Type, Accept"
+    );
+    next();
+  });
 
-// URL: GET /api/tickets/all
-router.get('/all', getAllTickets);
-
-module.exports = router;
+  // Ticket APIs
+  app.post("/api/tickets/create", controller.createTicket);
+  app.get("/api/tickets/all", controller.getAllTickets);
+};

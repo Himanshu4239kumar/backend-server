@@ -1,35 +1,17 @@
-const mongoose = require('mongoose');
+module.exports = mongoose => {
+  const schema = mongoose.Schema(
+    {
+      mt5Id: String,
+      email: String,
+      mobile: String,
+      category: String,
+      description: String,
+      userName: { type: String, default: "Trader" },
+      status: { type: String, default: "Open" }
+    },
+    { timestamps: true }
+  );
 
-const ticketSchema = new mongoose.Schema({
-  mt5Id: { 
-    type: String, 
-    required: true 
-  },
-  email: { 
-    type: String, 
-    required: true 
-  },
-  mobile: { 
-    type: String, 
-    required: true 
-  },
-  category: { 
-    type: String, 
-    required: true 
-  },
-  description: { 
-    type: String, 
-    required: true 
-  },
-  userName: { 
-    type: String, 
-    default: 'Trader' // Agar user login hai, toh uska naam pass kar sakte ho, varna default 'Trader' rahega
-  },
-  status: { 
-    type: String, 
-    default: 'Open', 
-    enum: ['Open', 'Resolved'] 
-  }
-}, { timestamps: true }); // timestamps true se createdAt aur updatedAt khud ban jayega
-
-module.exports = mongoose.model('Ticket', ticketSchema);
+  const Ticket = mongoose.model("ticket", schema);
+  return Ticket;
+};
