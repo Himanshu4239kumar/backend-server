@@ -19,12 +19,17 @@ const upload = multer({
 /* ===================================
    CORS (Fixed for Vercel & Ionic)
 =================================== */
-app.use(cors({
-  origin: true, // Yeh kisi bhi frontend origin (jaise localhost:8100) ko automatic allow kar dega
+const corsOptions = {
+  origin: [
+    'http://localhost:8100', // Tumhare PC (Local) ke liye
+    'https://himanshu4239kumar.github.io' // Tumhare live GitHub frontend ke liye
+  ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
-}));
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  optionsSuccessStatus: 200
+};
 
+app.use(cors(corsOptions));
 app.options("*", cors());
 
 /* ===================================
