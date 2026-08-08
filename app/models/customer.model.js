@@ -20,6 +20,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Customer= mongoose.model("customer", schema);
+  const User = mongoose.models.user || mongoose.model("customer", schema);
   return Customer;
 };

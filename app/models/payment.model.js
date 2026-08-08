@@ -26,6 +26,6 @@ module.exports = (mongoose) => {
     return object;
   });
 
-  const Payment = mongoose.model("payment", schema);
+  const User = mongoose.models.user || mongoose.model("payment", schema);
   return Payment;
 };

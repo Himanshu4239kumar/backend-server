@@ -12,6 +12,6 @@ module.exports = mongoose => {
     { timestamps: true }
   );
 
-  const Ticket = mongoose.model("ticket", schema);
+  const User = mongoose.models.user || mongoose.model("ticket", schema);
   return Ticket;
 };

@@ -17,5 +17,5 @@ const User = mongoose.model(
     active: Boolean
   })
 );
-
+const User = mongoose.models.user || mongoose.model("user", schema); // 'schema' ya jo bhi variable name ho
 module.exports = User;

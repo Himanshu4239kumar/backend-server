@@ -10,4 +10,5 @@ const PayoutRequestSchema = new mongoose.Schema({
   remarks: { type: String, default: "" }
 }, { timestamps: true }); // timestamps se createdAt aur updatedAt automatically database mein save ho jayega
 
-module.exports = mongoose.model("PayoutRequest", PayoutRequestSchema);
+// 👇 Bas yeh niche wali line change hui hai Vercel crash fix karne ke liye
+module.exports = mongoose.models.PayoutRequest || mongoose.model("PayoutRequest", PayoutRequestSchema);

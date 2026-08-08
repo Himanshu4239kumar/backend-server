@@ -16,6 +16,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Coupon = mongoose.model("coupon", schema);
+  const User = mongoose.models.user || mongoose.model("coupon", schema);
   return Coupon;
 };

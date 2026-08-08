@@ -61,6 +61,7 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Order = mongoose.model("order", schema);
+  const User = mongoose.models.user || mongoose.model("order", schema);
   return Order;
+  
 };

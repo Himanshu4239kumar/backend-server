@@ -16,4 +16,4 @@ const tradeSchema = new mongoose.Schema({
   closeTime: { type: Date }
 });
 
-module.exports = mongoose.model("Trade", tradeSchema);
+module.exports = mongoose.models.Trade || mongoose.model("Trade", tradeSchema);
