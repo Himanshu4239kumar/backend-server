@@ -21,6 +21,7 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Student = mongoose.model("student", schema);
+  // Naya Code (Vercel ke liye safe):
+const Student = mongoose.models.student || mongoose.model("student", schema);
   return Student;
 };
