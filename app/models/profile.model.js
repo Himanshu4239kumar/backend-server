@@ -21,6 +21,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const User = mongoose.models.user || mongoose.model("profile", schema);
+  const Profile = mongoose.models.Profile || mongoose.model("profile", schema);
   return Profile;
 };

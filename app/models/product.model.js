@@ -25,5 +25,5 @@ schema.method("toJSON", function () {
   return object;
 });
 
-const User = mongoose.models.user || mongoose.model("product", schema);
+const Product = mongoose.models.product || mongoose.model("product", schema);
 module.exports = Product;
