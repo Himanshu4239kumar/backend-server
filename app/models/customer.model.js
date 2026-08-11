@@ -2,24 +2,25 @@
 module.exports = mongoose => {
   var schema = mongoose.Schema(
     {
-        cname:String,
-        mobile:String,
-        email:String,
-        dob: String,
-        gender: String,
-        caddress:String,
-        cpassword:String,
-        status: Boolean,
+      cname: String,
+      mobile: String,
+      email: String,
+      dob: String,
+      gender: String,
+      caddress: String,
+      cpassword: String,
+      status: Boolean,
     },
     { timestamps: true }
   );
 
-  schema.method("toJSON", function() {
+  schema.method("toJSON", function () {
     const { __v, _id, ...object } = this.toObject();
     object.id = _id;
     return object;
   });
 
-  const User = mongoose.models.user || mongoose.model("customer", schema);
+  // 'schema' ki jagah wo naam likhna jo tumhari file me database structure ke liye hai (jaise CustomerSchema)
+  const Customer = mongoose.models.customer || mongoose.model("customer", schema);
   return Customer;
 };
