@@ -19,7 +19,7 @@ const upload = multer({
 const corsOptions = {
   origin: [
     'http://localhost:8100', // Tumhare PC (Local) ke liye
-     // Tumhare live GitHub frontend ke liye
+    'https://himanshu4239kumar.github.io' // Tumhare live GitHub frontend ke liye
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
