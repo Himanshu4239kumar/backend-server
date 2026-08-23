@@ -18,6 +18,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Qpaper= mongoose.model("qpaper", schema);
+  const Qpaper = mongoose.models.qpaper || mongoose.model("qpaper", schema);
   return Qpaper;
 };

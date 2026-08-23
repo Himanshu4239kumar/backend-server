@@ -17,5 +17,6 @@ module.exports = mongoose => {
   });
 
   const Vote = mongoose.model("vote", schema);
+  
   return Vote;
 };
