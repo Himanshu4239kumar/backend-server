@@ -16,6 +16,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Comment = mongoose.models.Comment ||mongoose.model("comment", schema);
+  const Comment = mongoose.models.comment ||mongoose.model("comment", schema);
   return Comment;
 };

@@ -19,6 +19,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Book =mongoose.models.Book || mongoose.model("book", schema);
+  const Book =mongoose.models.book || mongoose.model("book", schema);
   return Book;
 };

@@ -12,6 +12,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Cat = mongoose.models.Cat ||mongoose.model("cat", schema);
+  const Cat = mongoose.models.cat ||mongoose.model("cat", schema);
   return Cat;
 };
