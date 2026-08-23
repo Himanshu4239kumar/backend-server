@@ -14,6 +14,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Branch = mongoose.model("branch", schema);
+  const Branch =mongoose.models.Branch || mongoose.model("branch", schema);
   return Branch;
 };

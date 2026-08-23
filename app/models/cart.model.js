@@ -38,6 +38,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Cart = mongoose.model("cart", schema);
+  const Cart =mongoose.models.Cart || mongoose.model("cart", schema);
   return Cart;
 };

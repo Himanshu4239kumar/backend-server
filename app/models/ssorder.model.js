@@ -138,6 +138,6 @@ module.exports = (mongoose) => {
     return object;
   });
 
-  const Ssorder = mongoose.model("ssorder", schema);
+  const Ssorder = mongoose.models.Ssorder ||mongoose.model("ssorder", schema);
   return Ssorder;
 };

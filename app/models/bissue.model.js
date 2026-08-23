@@ -15,6 +15,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Bissue = mongoose.model("bissue", schema);
+  const Bissue =mongoose.models.Bissue || mongoose.model("bissue", schema);
   return Bissue;
 };

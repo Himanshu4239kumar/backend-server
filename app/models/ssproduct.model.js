@@ -23,6 +23,6 @@ schema.method("toJSON", function () {
   return object;
 });
 
-const Ssproduct = mongoose.model("Ssproduct", schema);
+const Ssproduct = mongoose.models.Ssproduct ||mongoose.model("Ssproduct", schema);
 
 module.exports = Ssproduct;

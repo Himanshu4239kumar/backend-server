@@ -15,6 +15,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Question = mongoose.model("question", schema);
+  const Question = mongoose.models.Question || mongoose.model("question", schema);
   return Question;
 };

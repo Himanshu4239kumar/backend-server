@@ -16,7 +16,7 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Vote = mongoose.model("vote", schema);
+  const Vote = mongoose.models.vote ||mongoose.model("vote", schema);
   
   return Vote;
 };
