@@ -25,6 +25,6 @@ module.exports = mongoose => {
     return object;
   });
 
-  const Order = mongoose.models.addres || mongoose.model("address", schema);
+  const Order = mongoose.models.address || mongoose.model("address", schema);
   return Order;
 };
